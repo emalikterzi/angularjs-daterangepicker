@@ -119,7 +119,6 @@
         if ($scope.dateRangePickerOptions) {
             for (var key in $scope.dateRangePickerOptions) {
                 if (available_options.indexOf(key) >= 0) {
-                    console.log(key)
                     options[key] = $scope.dateRangePickerOptions[key];
                 }
             }

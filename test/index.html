@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html data-ng-app="app" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../node_modules/daterangepicker/daterangepicker.css">
+    <script src="../node_modules/jquery/dist/jquery.js"></script>
+    <script src="../node_modules/moment/moment.js"></script>
+    <script src="../node_modules/daterangepicker/daterangepicker.js"></script>
+    <script src="../node_modules/angular/angular.js"></script>
+    <script src="../src/index.js"></script>
+    <script src="app.js"></script>
+</head>
+<body class="container" style="margin-top: 100px" data-ng-controller="TestController">
+<div class="row">
+    <div class="col-md-6">
+        <form name="test">
+            <div>
+                <input date-range-picker
+                       start-date="startDate"
+                       end-date="endDate"
+                       placeholder="select"
+                       data-ng-required="true"
+                       date-range-picker-options="options"
+                       clear-on-cancel="true"
+                       class="form-control">
+
+                <button class="btn btn-default" data-ng-disabled="!test.$valid">Test</button>
+            </div>
+        </form>
+        {{startDate}} - {{endDate}}
+    </div>
+</div>
+
+</body>
+</html>

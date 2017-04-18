@@ -1,0 +1,33 @@
+{
+  "name": "angularjs-daterangepicker",
+  "version": "1.0.0",
+  "description": "Date Range picker for angualrjs",
+  "main": "src/index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "daterangepicker": "2.1.25",
+    "angular": "1.6.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emalikterzi/angularjs-daterangepicker.git"
+  },
+  "keywords": [
+    "angularjs",
+    "jquery",
+    "daterange",
+    "picker"
+  ],
+  "author": "Enes Malik Terzi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/emalikterzi/angularjs-daterangepicker/issues"
+  },
+  "homepage": "https://github.com/emalikterzi/angularjs-daterangepicker#readme"
+}

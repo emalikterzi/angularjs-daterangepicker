@@ -8,6 +8,7 @@ var app = angular.module('app', ['angularjs.daterangepicker']);
 app.controller('TestController', function ($scope, $timeout) {
 
     $scope.options = {
+        // singleDatePicker:true,
         locale: {cancelLabel: 'Clear'},
         showDropdowns: true
     };

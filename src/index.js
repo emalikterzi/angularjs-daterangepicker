@@ -80,10 +80,18 @@
                 endDate = newValue[1];
             this.setStartDate(startDate);
             this.setEndDate(endDate);
-            if (!startDate || !endDate) {
-                this.$scope.startDate = null;
-                this.$scope.endDate = null;
-                $(this.el).val('');
+            if (this.options['singleDatePicker']) {
+                if (!startDate) {
+                    this.$scope.startDate = null;
+                    this.$scope.endDate = null;
+                    $(this.el).val('');
+                }
+            } else {
+                if (!startDate || !endDate) {
+                    this.$scope.startDate = null;
+                    this.$scope.endDate = null;
+                    $(this.el).val('');
+                }
             }
             this.validate();
 

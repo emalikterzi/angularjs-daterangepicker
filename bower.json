@@ -1,7 +1,7 @@
 {
   "name": "angularjs-daterangepicker",
   "description": "Date Range picker for angualrjs",
-  "main": "src/index.js",
+  "main": "index.js",
   "authors": [
     "Enes Malik Terzi"
   ],

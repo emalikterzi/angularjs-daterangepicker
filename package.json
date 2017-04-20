@@ -1,8 +1,8 @@
 {
   "name": "angularjs-daterangepicker",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Date Range picker for angualrjs",
-  "main": "src/index.js",
+  "main": "index.js",
   "directories": {
     "test": "test"
   },

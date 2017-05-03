@@ -65,7 +65,7 @@
     };
 
     Controller.prototype.setEndDateScope = function (endDate) {
-        if (endDate && this.options['singleDatePicker']) {
+        if (endDate && !this.options['singleDatePicker']) {
             this.$scope['endDate'] = endDate;
         }
     };

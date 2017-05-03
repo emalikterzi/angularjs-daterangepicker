@@ -27,6 +27,7 @@
                 maxDate: '=',
                 startDate: '=',
                 endDate: '=',
+                onChange: '&',
                 clearOnCancel: '@',
                 ngRequired: '@'
             },
@@ -51,6 +52,8 @@
             this.setEndDateScope(endDate);
             this.setValidity(true);
         }
+        if (this.$scope.onChange)
+            this.$scope.onChange();
     };
 
     Controller.prototype.setValidity = function (flag) {

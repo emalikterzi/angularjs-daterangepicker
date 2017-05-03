@@ -16,6 +16,8 @@ app.controller('TestController', function ($scope, $timeout) {
     $scope.startDate = moment();
     $scope.endDate = moment();
 
-console.dir($scope)
+    $scope.testMethod = function () {
+        console.log('here')
+    }
 });
 

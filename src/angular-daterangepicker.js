@@ -52,8 +52,6 @@
             this.setEndDateScope(endDate);
             this.setValidity(true);
         }
-        if (this.$scope.onChange)
-            this.$scope.onChange();
     };
 
     Controller.prototype.setValidity = function (flag) {
@@ -142,6 +140,8 @@
                     $scope.$apply(function () {
                         instance.onChange.apply(instance, drpCbArgs)
                     })
+                    if($scope.onChange)
+                        $scope.onChange()
                 });
             instance.setElement(el);
             $scope.$watchGroup(watchList, function (n) {

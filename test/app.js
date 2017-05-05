@@ -13,8 +13,11 @@ app.controller('TestController', function ($scope, $timeout) {
         showDropdowns: true
     };
 
+    // $timeout(function () {
     $scope.startDate = moment();
-    $scope.endDate = moment();
+    $scope.endDate = moment().subtract(1, 'd');
+    // }, 2000)
+
 
     $scope.testMethod = function () {
         console.log('here')

@@ -81,6 +81,7 @@
                 endDate = newValue[1];
             this.setStartDate(startDate);
             this.setEndDate(endDate);
+            console.dir(newValue)
             if (this.options['singleDatePicker']) {
                 if (!startDate) {
                     this.$scope.startDate = null;
@@ -108,9 +109,9 @@
         }
     };
 
-    Controller.prototype.setEndDate = function (startDate) {
-        if (startDate) {
-            this.el.data('daterangepicker').setEndDate(startDate);
+    Controller.prototype.setEndDate = function (endDate) {
+        if (endDate) {
+            console.dir(this.el.data('daterangepicker'))
         }
     };
 
@@ -122,8 +123,10 @@
 
     function link($scope, $element, $attr, ctrl) {
 
-        var options = {};
-        var watchList = ['startDate', 'endDate', 'minDate', 'maxDate'];
+        var options = {},
+            initial = true,
+            isFound = false,
+            watchList = ['startDate', 'endDate', 'minDate', 'maxDate'];
 
         if ($scope.dateRangePickerOptions) {
             for (var key in $scope.dateRangePickerOptions) {
@@ -133,14 +136,28 @@
             }
         }
 
+        if (options['singleDatePicker']) {
+            initial = true;
+            if ($scope['startDate']) {
+                options['startDate'] = $scope['startDate'];
+                isFound = true;
+            }
+        } else {
+            if ($scope['startDate'] && $scope['endDate']) {
+                options['startDate'] = $scope['startDate'];
+                options['endDate'] = $scope['endDate'];
+                isFound = true;
+            }
+        }
+
         function init() {
             var instance = new Controller($scope, options, ctrl, $scope.ngRequired),
                 el = $($element).daterangepicker(options, function () {
                     var drpCbArgs = arguments;
                     $scope.$apply(function () {
                         instance.onChange.apply(instance, drpCbArgs)
-                    })
-                    if($scope.onChange)
+                    });
+                    if ($scope.onChange)
                         $scope.onChange()
                 });
             instance.setElement(el);
@@ -172,8 +189,10 @@
                             instance.setValidity(false);
                         })
                     });
-            $element.val('');
-            instance.setValidity(false);
+            if (!isFound) {
+                $element.val('');
+                instance.setValidity(false);
+            }
         }
 
         init();

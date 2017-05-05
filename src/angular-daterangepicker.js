@@ -19,182 +19,247 @@
     function dateRangePicker() {
         return {
             restrict: 'A',
-            require: '^form',
             scope: {
                 dateRangePicker: '=',
                 dateRangePickerOptions: '=',
-                minDate: '=',
-                maxDate: '=',
                 startDate: '=',
                 endDate: '=',
+                minDate: '=',
+                maxDate: '=',
                 onChange: '&',
-                clearOnCancel: '@',
-                ngRequired: '@'
+                clearOnCancel: '@'
             },
-            link: link
+            compile: function ($el, $attr) {
+                var baseElementClone = $el.clone();
+                return function ($scope, $element, $attr) {
+
+                    var baseOptions = {},
+                        currentApiElement = undefined,
+                        currentApi = undefined,
+                        dpApi = undefined,
+                        watchList = ['startDate', 'endDate', 'minDate', 'maxDate'],
+                        isDataFound = false;
+
+                    if ($scope.dateRangePickerOptions) {
+                        for (var key in $scope.dateRangePickerOptions) {
+                            if (available_options.indexOf(key) >= 0) {
+                                baseOptions[key] = $scope.dateRangePickerOptions[key];
+                            }
+                        }
+                    }
+
+                    if (baseOptions['singleDatePicker']) {
+                        if ($scope['startDate']) {
+                            isDataFound = true;
+                        }
+                    } else {
+                        if ($scope['startDate'] && $scope['endDate']) {
+                            isDataFound = true;
+                        }
+                    }
+
+                    $scope.$on('$destroy', function () {
+                        currentApiElement.remove();
+                        currentApi.destroy();
+                    });
+
+                    function initElement() {
+                        createElement();
+                        createController();
+                        openListener();
+                    }
+
+                    function openListener() {
+                        $scope.$watchGroup(watchList, function (n) {
+                                if (n && n.length > 0) {
+
+                                    var startDate = n[0],
+                                        endDate = n[1],
+                                        minDate = n[2],
+                                        maxDate = n[3];
+
+                                    if (minDate)
+                                        dpApi.setMinDate(minDate);
+
+                                    if (maxDate)
+                                        dpApi.setMaxDate(maxDate);
+
+                                    if (startDate)
+                                        dpApi.setStartDate(startDate);
+
+                                    if (endDate)
+                                        dpApi.setEndDate(endDate);
+
+                                }
+                            }
+                        );
+                    }
+
+                    function createElement() {
+                        var tempOptions = angular.copy(baseOptions);
+                        tempOptions['startDate'] = $scope.startDate;
+                        tempOptions['endDate'] = $scope.endDate;
+                        currentApiElement = $(baseElementClone).daterangepicker(tempOptions);
+                        $element.replaceWith(currentApiElement);
+
+                        if (!isDataFound) {
+                            $(currentApiElement).val('');
+                        }
+                    }
+
+                    function createController() {
+                        currentApi = new DateRangePickerApi(currentApiElement, $scope, baseOptions);
+                        currentApi.init();
+                        $scope.dateRangePicker = currentApi.build();
+                        dpApi = $scope.dateRangePicker;
+                    }
+
+                    initElement();
+                }
+            }
         }
     }
 
-    function Controller(s, o, c, r) {
+    var applyEvent = 'apply.daterangepicker';
+    var cancelEvent = 'cancel.daterangepicker';
+    var hideEvent = 'hide.daterangepicker';
+
+    function DateRangePickerApi(e, s, o) {
+        this.el = e;
         this.$scope = s;
         this.options = o;
-        this.formController = c;
-        this.required = r;
-        this.el;
     }
 
-    Controller.prototype.onChange = function (startDate, endDate) {
-        if (this.options['singleDatePicker']) {
-            this.setStartDateScope(startDate);
-            this.setValidity(true);
-        } else {
-            this.setStartDateScope(startDate);
-            this.setEndDateScope(endDate);
-            this.setValidity(true);
-        }
-    };
+    DateRangePickerApi.prototype.build = function () {
+        var self = this;
+        return {
+            setMinDate: function (x) {
+                self.el.data('daterangepicker').minDate = x;
+                self.el.data('daterangepicker').updateView();
+                self.el.data('daterangepicker').updateCalendars();
 
-    Controller.prototype.setValidity = function (flag) {
-        if (this.required)
-            this.formController.$setValidity('date-range-picker', flag);
-    };
-
-    Controller.prototype.setStartDateScope = function (startDate) {
-        if (startDate) {
-            this.$scope['startDate'] = startDate;
-        }
-    };
-
-    Controller.prototype.setEndDateScope = function (endDate) {
-        if (endDate && !this.options['singleDatePicker']) {
-            this.$scope['endDate'] = endDate;
-        }
-    };
-
-    Controller.prototype.setElement = function (x) {
-        this.el = x;
-    };
-
-    Controller.prototype.onWatch = function (newValue) {
-        if (newValue && newValue.length > 0) {
-            var startDate = newValue[0],
-                endDate = newValue[1];
-            this.setStartDate(startDate);
-            this.setEndDate(endDate);
-            console.dir(newValue)
-            if (this.options['singleDatePicker']) {
-                if (!startDate) {
-                    this.$scope.startDate = null;
-                    this.$scope.endDate = null;
-                    $(this.el).val('');
+                if (self.$scope.startDate
+                    && self.$scope.startDate.isBefore(x)) {
+                    self.$scope.startDate = x;
                 }
-            } else {
-                if (!startDate || !endDate) {
-                    this.$scope.startDate = null;
-                    this.$scope.endDate = null;
-                    $(this.el).val('');
+
+                if (self.$scope.endDate
+                    && self.$scope.endDate.isBefore(x)) {
+                    self.$scope.endDate = x;
                 }
-            }
-            this.validate();
+            },
+            setMaxDate: function (x) {
+                self.el.data('daterangepicker').maxDate = x;
+                self.el.data('daterangepicker').updateView();
+                self.el.data('daterangepicker').updateCalendars();
 
-        }
-    };
-    Controller.prototype.validate = function () {
-        if (this.options['singleDatePicker'] && this.$scope.startDate) {
-            this.setValidity(true);
-        } else if (!this.options['singleDatePicker'] && this.$scope.startDate && this.$scope.endDate) {
-            this.setValidity(true);
-        } else {
-            this.setValidity(false);
-        }
-    };
-
-    Controller.prototype.setEndDate = function (endDate) {
-        if (endDate) {
-            console.dir(this.el.data('daterangepicker'))
-        }
-    };
-
-    Controller.prototype.setStartDate = function (endDate) {
-        if (endDate && this.options['singleDatePicker']) {
-            this.el.data('daterangepicker').setStartDate(endDate);
-        }
-    };
-
-    function link($scope, $element, $attr, ctrl) {
-
-        var options = {},
-            initial = true,
-            isFound = false,
-            watchList = ['startDate', 'endDate', 'minDate', 'maxDate'];
-
-        if ($scope.dateRangePickerOptions) {
-            for (var key in $scope.dateRangePickerOptions) {
-                if (available_options.indexOf(key) >= 0) {
-                    options[key] = $scope.dateRangePickerOptions[key];
+                if (self.$scope.startDate
+                    && self.$scope.startDate.isAfter(x)) {
+                    self.$scope.startDate = null;
                 }
+
+                if (self.$scope.endDate
+                    && self.$scope.endDate.isAfter(x)) {
+                    self.$scope.endDate = null;
+                }
+                self.clearInput();
+            },
+            setStartDate: function (x) {
+                self.el.data('daterangepicker').setStartDate(x);
+            },
+            setEndDate: function (x) {
+                self.el.data('daterangepicker').setEndDate(x);
+            },
+            isSingle: function () {
+                self.el.data('daterangepicker')['singleDatePicker'];
+            },
+            show: function () {
+                self.el.data('daterangepicker').show();
+            },
+            hide: function () {
+                self.el.data('daterangepicker').hide();
             }
         }
+    };
 
-        if (options['singleDatePicker']) {
-            initial = true;
-            if ($scope['startDate']) {
-                options['startDate'] = $scope['startDate'];
-                isFound = true;
-            }
-        } else {
-            if ($scope['startDate'] && $scope['endDate']) {
-                options['startDate'] = $scope['startDate'];
-                options['endDate'] = $scope['endDate'];
-                isFound = true;
-            }
-        }
+    DateRangePickerApi.prototype.onApply = function (event, api) {
+        var self = this;
+        console.dir(api)
 
-        function init() {
-            var instance = new Controller($scope, options, ctrl, $scope.ngRequired),
-                el = $($element).daterangepicker(options, function () {
-                    var drpCbArgs = arguments;
-                    $scope.$apply(function () {
-                        instance.onChange.apply(instance, drpCbArgs)
-                    });
-                    if ($scope.onChange)
-                        $scope.onChange()
-                });
-            instance.setElement(el);
-            $scope.$watchGroup(watchList, function (n) {
-                instance.onWatch(n)
+        if (self.isSingle()) {
+            self.$scope.$apply(function () {
+                self.$scope.startDate = api.startDate;
+                self.$scope.endDate = api.startDate;
             });
 
-
-            $($element).on('hide.daterangepicker',
-                function () {
-                    if (options['singleDatePicker']
-                        && !$scope.startDate) {
-                        $($element).val('');
-                    }
-                    if (!options['singleDatePicker']
-                        && !$scope.startDate
-                        && !$scope.endDate) {
-                        $($element).val('');
-                    }
-                });
-
-            if ($scope.clearOnCancel)
-                $($element).on('cancel.daterangepicker',
-                    function (ev, picker) {
-                        $($element).val('');
-                        $scope.$apply(function () {
-                            $scope.startDate = null;
-                            $scope.endDate = null;
-                            instance.setValidity(false);
-                        })
-                    });
-            if (!isFound) {
-                $element.val('');
-                instance.setValidity(false);
-            }
+        } else {
+            self.$scope.$apply(function () {
+                self.$scope.startDate = api.startDate;
+                self.$scope.endDate = api.endDate;
+            });
         }
 
-        init();
-    }
-})(jQuery, moment);
+        if (this.$scope.onChange)
+            this.$scope.onChange();
+    };
+
+    DateRangePickerApi.prototype.onCancel = function (event, api) {
+        var self = this;
+        if (self.$scope.clearOnCancel) {
+            self.$scope.$apply(function () {
+                self.$scope.startDate = null;
+                self.$scope.endDate = null;
+            });
+
+            self.clearInput();
+
+            if (this.$scope.onChange)
+                this.$scope.onChange();
+
+        }
+    };
+
+    DateRangePickerApi.prototype.onHide = function (event, api) {
+        var self = this;
+        setInterval(function () {
+            if (self.isSingle()) {
+                if (!self.$scope.startDate)
+                    self.clearInput();
+            } else {
+                if (!self.$scope.startDate && !self.$scope.endDate)
+                    self.clearInput();
+            }
+        })
+
+    };
+
+    DateRangePickerApi.prototype.clearInput = function () {
+        $(this.el).val('');
+    };
+
+    DateRangePickerApi.prototype.isSingle = function () {
+        return this.options['singleDatePicker'];
+    };
+
+    DateRangePickerApi.prototype.init = function () {
+        var self = this;
+        this.el.on(applyEvent, function (event, api) {
+            self.onApply(event, api);
+        });
+        this.el.on(cancelEvent, function (event, api) {
+            self.onCancel(event, api);
+        });
+        this.el.on(hideEvent, function (event, api) {
+            self.onHide(event, api);
+        });
+    };
+
+
+    DateRangePickerApi.prototype.destroy = function () {
+        this.el.off(applyEvent);
+        this.el.off(cancelEvent);
+        this.el.off(hideEvent);
+    };
+
+})
+(jQuery, moment);

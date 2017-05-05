@@ -15,22 +15,34 @@
 <body class="container" style="margin-top: 100px" data-ng-controller="TestController">
 <div class="row">
     <div class="col-md-6">
-        <form name="test">
-            <div>
-                <input date-range-picker
-                       start-date="startDate"
-                       end-date="endDate"
-                       placeholder="select"
-                       on-change="testMethod()"
-                       data-ng-required="true"
-                       date-range-picker-options="options"
-                       clear-on-cancel="true"
-                       class="form-control">
 
-                <button class="btn btn-default" data-ng-disabled="!test.$valid">Test</button>
-            </div>
-        </form>
-        {{startDate}} - {{endDate}}
+        <div>
+            <input
+                    date-range-picker="testApi"
+                    start-date="startDate"
+                    end-date="endDate"
+                    placeholder="Select"
+                    on-change="testMethod()"
+                    date-range-picker-options="options"
+                    clear-on-cancel="true"
+                    class="form-control">
+
+
+            <input
+                    date-range-picker="testApi"
+                    start-date="startDate2"
+                    end-date="endDate2"
+                    max-date="startDate"
+                    placeholder="Select"
+                    on-change="testMethod()"
+                    date-range-picker-options="options2"
+                    clear-on-cancel="true"
+                    class="form-control">
+
+
+        </div>
+
+        {{startDate2   }} -     {{endDate2}}
     </div>
 </div>
 

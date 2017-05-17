@@ -219,7 +219,7 @@
 
             }
         }
-        if (this.$scope.closeOnClear)
+        if (!this.$scope.closeOnClear)
             api.show();
     };
 

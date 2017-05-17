@@ -8,9 +8,11 @@ var app = angular.module('app', ['angularjs.daterangepicker']);
 app.controller('TestController', function ($scope, $timeout) {
 
     $scope.options = {
-        singleDatePicker: true,
-        locale: {cancelLabel: 'Clear'},
-        showDropdowns: true
+        showDropdowns: true,
+        locale: {
+            cancelLabel: 'Clear',
+            format: 'MM/DD/YYYY'
+        }
     };
 
 
@@ -19,9 +21,8 @@ app.controller('TestController', function ($scope, $timeout) {
         showDropdowns: true
     };
 
-    $scope.startDate2= moment();
-    $scope.endDate2= moment();
-
+    $scope.startDate2 = moment().startOf('day');
+    $scope.endDate2 = moment().endOf('day');
     $scope.testMethod = function () {
         console.dir($scope)
     }

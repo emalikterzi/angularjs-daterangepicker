@@ -25,6 +25,7 @@
                     on-change="testMethod()"
                     date-range-picker-options="options"
                     clear-on-cancel="true"
+                    close-on-clear="false"
                     class="form-control">
 
 
@@ -32,7 +33,7 @@
                     date-range-picker="testApi"
                     start-date="startDate2"
                     end-date="endDate2"
-                    max-date="startDate"
+                    min-date="startDate"
                     placeholder="Select"
                     on-change="testMethod()"
                     date-range-picker-options="options2"
@@ -42,7 +43,7 @@
 
         </div>
 
-        {{startDate2   }} -     {{endDate2}}
+        {{startDate2 }} - {{endDate2}}
     </div>
 </div>
 

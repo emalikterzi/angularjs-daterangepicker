@@ -23,9 +23,10 @@
                 dateRangePicker: '=',
                 dateRangePickerOptions: '=',
                 startDate: '=',
-                endDate: '=',
-                minDate: '=',
-                maxDate: '=',
+                endDate: '=?',
+                minDate: '=?',
+                maxDate: '=?',
+                closeOnClear: '=?',
                 onChange: '&',
                 clearOnCancel: '@'
             },
@@ -184,8 +185,6 @@
 
     DateRangePickerApi.prototype.onApply = function (event, api) {
         var self = this;
-        console.dir(api)
-
         if (self.isSingle()) {
             self.$scope.$apply(function () {
                 self.$scope.startDate = api.startDate;
@@ -215,8 +214,9 @@
 
             if (this.$scope.onChange)
                 this.$scope.onChange();
-
         }
+        if (this.$scope.closeOnClear)
+            api.show();
     };
 
     DateRangePickerApi.prototype.onHide = function (event, api) {

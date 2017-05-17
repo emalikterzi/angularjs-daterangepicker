@@ -212,8 +212,12 @@
 
             self.clearInput();
 
-            if (this.$scope.onChange)
-                this.$scope.onChange();
+            try {
+                if (this.$scope.onChange)
+                    this.$scope.onChange();
+            } catch (e) {
+
+            }
         }
         if (this.$scope.closeOnClear)
             api.show();

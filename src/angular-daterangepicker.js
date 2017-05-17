@@ -216,11 +216,15 @@
                 if (this.$scope.onChange)
                     this.$scope.onChange();
             } catch (e) {
-
+                throw e;
+            } finally {
+                if (!this.$scope.closeOnClear)
+                    api.show();
             }
+        } else {
+            if (!this.$scope.closeOnClear)
+                api.show();
         }
-        if (!this.$scope.closeOnClear)
-            api.show();
     };
 
     DateRangePickerApi.prototype.onHide = function (event, api) {

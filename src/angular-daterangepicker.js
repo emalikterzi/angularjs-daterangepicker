@@ -20,7 +20,6 @@
         return {
             restrict: 'A',
             scope: {
-                dateRangePicker: '=',
                 dateRangePickerOptions: '=',
                 startDate: '=',
                 endDate: '=?',
@@ -111,8 +110,7 @@
                     function createController() {
                         currentApi = new DateRangePickerApi(currentApiElement, $scope, baseOptions);
                         currentApi.init();
-                        $scope.dateRangePicker = currentApi.build();
-                        dpApi = $scope.dateRangePicker;
+                        dpApi = currentApi.build();
                     }
 
                     initElement();

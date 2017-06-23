@@ -195,9 +195,11 @@
                 self.$scope.endDate = api.endDate;
             });
         }
+        this.$scope.$apply(function () {
+            if (self.$scope.onChange)
+                self.$scope.onChange();
+        });
 
-        if (this.$scope.onChange)
-            this.$scope.onChange();
     };
 
     DateRangePickerApi.prototype.onCancel = function (event, api) {
@@ -206,19 +208,20 @@
             self.$scope.$apply(function () {
                 self.$scope.startDate = null;
                 self.$scope.endDate = null;
+
+                self.clearInput();
+                try {
+                    if (this.$scope.onChange)
+                        this.$scope.onChange();
+                } catch (e) {
+                    throw e;
+                } finally {
+                    if (!this.$scope.closeOnClear)
+                        api.show();
+                }
+
             });
 
-            self.clearInput();
-
-            try {
-                if (this.$scope.onChange)
-                    this.$scope.onChange();
-            } catch (e) {
-                throw e;
-            } finally {
-                if (!this.$scope.closeOnClear)
-                    api.show();
-            }
         } else {
             if (!this.$scope.closeOnClear)
                 api.show();

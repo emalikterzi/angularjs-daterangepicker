@@ -16,34 +16,21 @@
 <div class="row">
     <div class="col-md-6">
 
-        <div>
-            <input
-                    date-range-picker
-                    start-date="startDate"
-                    end-date="endDate"
-                    placeholder="Select"
-                    on-change="testMethod()"
-                    date-range-picker-options="options"
-                    clear-on-cancel="true"
-                    close-on-clear="false"
-                    class="form-control">
+        <form name="test">
+            <div>
+                <input date-range-picker="t1"
+                       start-date="startDate"
+                       end-date="endDate"
+                       placeholder="select"
+                       data-ng-required="true"
+                       clear-on-cancel="true"
+                       date-range-picker-options="options"
+                       class="form-control">
 
-
-            <input
-                    date-range-picker
-                    start-date="startDate2"
-                    end-date="endDate2"
-                    min-date="startDate"
-                    placeholder="Select"
-                    on-change="testMethod()"
-                    date-range-picker-options="options2"
-                    clear-on-cancel="true"
-                    class="form-control">
-
-
-        </div>
-
-        {{startDate2 }} - {{endDate2}}
+                <button class="btn btn-default" data-ng-disabled="!test.$valid">Test</button>
+            </div>
+        </form>
+        {{startDate}} - {{endDate}}
     </div>
 </div>
 

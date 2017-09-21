@@ -10,11 +10,15 @@ app.controller('TestController', function ($scope, $timeout) {
     $scope.options = {
         locale: {cancelLabel: 'Clear'},
         showDropdowns: true,
-        singleDatePicker:true
+        // singleDatePicker:true
     };
 
     // $scope.startDate = moment();
     // $scope.endDate = moment();
+
+    $scope.onChange = function () {
+        console.dir($scope);
+    }
 
 });
 

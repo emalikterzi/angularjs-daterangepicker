@@ -14,9 +14,19 @@
     angular.module('angularjs.daterangepicker', []);
 
     angular.module('angularjs.daterangepicker')
-        .directive('dateRangePicker', dateRangePicker);
+        .directive('dateRangePicker', dateRangePicker)
+        .factory('dateRangePickerIdGenerator',dateRangePickerIdGenerator);
 
-    function dateRangePicker() {
+    function dateRangePickerIdGenerator() {
+        var id = 0;
+        return {
+            getId:function () {
+                return ++id;
+            }
+        }
+    }
+    dateRangePicker.$inject =['dateRangePickerIdGenerator'];
+    function dateRangePicker(dateRangePickerIdGenerator) {
         return {
             restrict: 'A',
             scope: {
@@ -41,10 +51,11 @@
                         isDataFound = false;
 
                     $scope.formCtrl = ctrl;
+                    $scope.dateRangePickerId = 'daterange-picker-' + dateRangePickerIdGenerator.getId();
 
                     if ($scope.formCtrl && $scope.ngRequired
                         && !$scope.startDate && !$scope.endDate) //initial
-                        $scope.formCtrl.$setValidity('daterangepicker',false);
+                        $scope.formCtrl.$setValidity($scope.dateRangePickerId,false);
 
 
                     if ($scope.dateRangePickerOptions) {
@@ -204,9 +215,9 @@
         }
         if (self.$scope.formCtrl && self.$scope.ngRequired)
             if (self.$scope.startDate && self.$scope.endDate) {
-                self.$scope.formCtrl.$setValidity('daterangepicker', true);
+                self.$scope.formCtrl.$setValidity(self.$scope.dateRangePickerId, true);
             } else {
-                self.$scope.formCtrl.$setValidity('daterangepicker', false);
+                self.$scope.formCtrl.$setValidity(self.$scope.dateRangePickerId, false);
             }
         if (self.$scope.onChange)
             this.$scope.$apply(function () {
@@ -222,7 +233,7 @@
                 self.$scope.startDate = null;
                 self.$scope.endDate = null;
                 if (self.$scope.formCtrl && self.$scope.ngRequired)
-                    self.$scope.formCtrl.$setValidity('daterangepicker', false);
+                    self.$scope.formCtrl.$setValidity(self.$scope.dateRangePickerId, false);
 
                 self.clearInput();
                 try {
